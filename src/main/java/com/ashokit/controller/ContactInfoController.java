@@ -12,49 +12,51 @@ import com.ashokit.service.IContactService;
 
 @Controller()
 public class ContactInfoController {
-	
+
 	private IContactService service;
-	
+
 	public ContactInfoController(IContactService service) {
 		this.service = service;
 	}
 
 	/**
-	  *This method is used to display contact form
-	  *
-	  *@return
-	  */
-	
+	 * This method is used to display contact form
+	 *
+	 * @return
+	 */
+
 	@GetMapping("/load-form")
 	public String loadform(Model model) {
-		Contact cobj=new Contact();
-		
+		Contact cobj = new Contact();
+
 		// sending data from controller to UI
 		model.addAttribute("contact", cobj);
-		
+
 		// returning logical view name
 		return "contact";
 	}
-	
+
 	@PostMapping("/saveContact")
 	public String handleSubmitBtn(Contact contact, Model model) {
-		boolean isSaved=service.saveOrUpdateContact(contact);
-		
-		if(isSaved) {
+		System.out.println(contact.toString());
+
+		if (contact.getContactId() == null) {
+			boolean isSaved = service.saveOrUpdateContact(contact);
 			model.addAttribute("succMsg", "Contact Saved");
-		}else {
-			model.addAttribute("failMsg", "Failed to saved contact");
+		} else {
+			boolean isSaved = service.saveOrUpdateContact(contact);
+			model.addAttribute("succMsg", "Contact Updated");
 		}
-		
+
 		return "contact";
 	}
-	
+
 	@GetMapping("/view-contacts")
 	public String handleViewsContactHyperLink(Model model) {
 		List<Contact> allContacts = service.getAllContacts();
-		
+
 		model.addAttribute("contacts", allContacts);
-		
+
 		return "contacts-display";
 	}
-	}
+}
